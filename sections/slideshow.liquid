@@ -124,15 +124,20 @@
           <div class="hero__text-wrap{% if block.settings.image_overlay %} slideshow__overlay{% endif %}">
             <div class="hero__text-align wrapper">
               <div class="hero__text-content" data-hero-text-content>
+                {%- unless block.settings.slide_heading == blank -%}
+                  <h2 class="hero__title h1">
+                    {{ block.settings.slide_heading | escape }}
+                  </h2>
+                {%- endunless -%}
                 {%- unless block.settings.slide_subheading == blank -%}
                   <p class="hero__subtitle">
                     {{ block.settings.slide_subheading | escape }}
                   </p>
                 {%- endunless -%}
-                {%- unless block.settings.slide_heading == blank -%}
-                  <h2 class="hero__title h1">
-                    {{ block.settings.slide_heading | escape }}
-                  </h2>
+                {%- unless block.settings.slide_subheading_2 == blank -%}
+                  <p class="hero__subtitle">
+                    {{ block.settings.slide_subheading_2 | escape }}
+                  </p>
                 {%- endunless -%}
                 {%- if block.settings.button_label != blank and block.settings.button_link != blank -%}
                   <a href="{{ block.settings.button_link }}" style="color: {{ block.settings.slide_button_label_color }}; background-color: {{ block.settings.slide_button_background_color }}" class="btn hero__cta">
@@ -153,7 +158,7 @@
               <span class="icon icon-play" aria-hidden="true"></span>
             </button>
           {%- endif -%}
-          <ul>
+          {% comment %} <ul>
             <li>
               <button class="slick-prev" aria-label="{{ 'home_page.slideshow.previous_slide' | t }}" data-slide-previous>
                 <span class="icon icon-slide-prev" aria-hidden="true"></span>
@@ -164,7 +169,7 @@
                 <span class="icon icon-slide-next" aria-hidden="true"></span>
               </button>
             </li>
-          </ul>
+          </ul> {% endcomment %}
           <div class="hero__dots-wrapper" data-hero-dots-wrapper></div>
         </div>
       {%- endif -%}
@@ -173,15 +178,20 @@
       <div class="hero__adapt-text-wrap wrapper" data-hero-adapt-text-wrap>
         {%- for block in section.blocks -%}
           <div class="hero__text-content hero__text-content--adapt text-center" data-index="{{ forloop.index0 }}" data-hero-text-content>
+            {%- unless block.settings.slide_heading == blank -%}
+              <h2 class="hero__title h1">
+                {{ block.settings.slide_heading | escape }}
+              </h2>
+            {%- endunless -%}
             {%- unless block.settings.slide_subheading == blank -%}
               <p class="hero__subtitle">
                 {{ block.settings.slide_subheading | escape }}
               </p>
             {%- endunless -%}
-            {%- unless block.settings.slide_heading == blank -%}
-              <h2 class="hero__title h1">
-                {{ block.settings.slide_heading | escape }}
-              </h2>
+            {%- unless block.settings.slide_subheading_2 == blank -%}
+              <p class="hero__subtitle">
+                {{ block.settings.slide_subheading_2 | escape }}
+              </p>
             {%- endunless -%}
             {%- if block.settings.button_label != blank and block.settings.button_link != blank -%}
               <a href="{{ block.settings.button_link }}" class="hero__cta btn">
@@ -194,6 +204,25 @@
     {%- endif -%}
   {%- endif -%}
 </div>
+
+{% style %}
+#shopify-section-{{ section.id }} .hero__subtitle {
+  font-family: Helvetica;
+  font-style: normal;
+  font-weight: bold;
+  text-transform: none;
+}
+@media screen and (min-width: 769px) {
+  #shopify-section-{{ section.id }} .hero__title.h1{
+    font-size: 6em;
+  }
+  #shopify-section-{{ section.id }} .hero__subtitle {
+    font-size: 32px;
+    line-height: 37px;
+    letter-spacing: 0.04em;
+  }
+}
+{% endstyle %}
 
 {% schema %}
 {
@@ -1083,6 +1112,34 @@
             "zh-CN": "副标题",
             "zh-TW": "子標題"
           },
+          "default": {
+            "cs": "Úvod",
+            "da": "Introduktion",
+            "de": "Für den Einstieg:",
+            "en": "An introductory",
+            "es": "Frase introductoria",
+            "fi": "Aloittaminen",
+            "fr": "Introduction",
+            "it": "Come introduzione",
+            "ja": "紹介",
+            "ko": "소개",
+            "nb": "En introduksjon",
+            "nl": "Een inleiding",
+            "pl": "Wprowadzenie",
+            "pt-BR": "Uma introdução",
+            "pt-PT": "Uma introdução",
+            "sv": "En introduktion",
+            "th": "การเกริ่นนำ",
+            "tr": "Giriş",
+            "vi": "Một Biểu ngữ chủ đạo",
+            "zh-CN": "介绍性的",
+            "zh-TW": "首次優惠"
+          }
+        },
+        {
+          "type": "text",
+          "id": "slide_subheading_2",
+          "label": "Second Subheading",
           "default": {
             "cs": "Úvod",
             "da": "Introduktion",
