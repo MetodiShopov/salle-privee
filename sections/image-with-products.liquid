@@ -1,0 +1,162 @@
+<div class="section-wrapper {% if section.settings.side == "right" %}revert{% endif %}">
+    <div class="img-wrapper">
+        <a href="{{ section.settings.img_btn_link }}">{{ section.settings.img_btn_text }}</a>
+    </div>
+    <div class="all-product-wrapper {% if section.blocks.size == 1 %}one-product{% else %}four-product{% endif %}">
+        {% for block in section.blocks %}
+            <a href="{{ block.settings.featured_product.url }}" class="product-holder" 
+            style="background-image: url(&quot;{{ block.settings.featured_product.featured_image | img_url: 'master' }}&quot;);">
+                <p style="color: {{ block.settings.product_colour }}">
+                    {{ block.settings.featured_product.title }}
+                </p>
+                <p style="color: {{ block.settings.product_colour }}">
+                    {{ block.settings.featured_product.price | money_with_currency }}
+                </p>
+            </a>
+        {% endfor %}
+    </div>
+</div>
+
+{% style %}
+#shopify-section-{{ section.id }}.shopify-section {
+    margin-top: 0;
+}
+#shopify-section-{{ section.id }} .section-wrapper {
+    display: flex;
+    height: 900px;
+    max-height: 100vh;
+}
+#shopify-section-{{ section.id }} .section-wrapper.revert {
+    flex-direction: row-reverse;
+}
+#shopify-section-{{ section.id }} .section-wrapper .img-wrapper,
+#shopify-section-{{ section.id }} .section-wrapper .all-product-wrapper {
+    width: 50%;
+}
+#shopify-section-{{ section.id }} .section-wrapper .img-wrapper {
+    background-image: url("{{ section.settings.img | img_url: 'master' }}");
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    flex-direction: column-reverse;
+}
+#shopify-section-{{ section.id }} .section-wrapper .img-wrapper a {
+    color: white;
+    font-size: 12px;
+    line-height: 14px;
+    margin: 40px 24px;
+}
+
+#shopify-section-{{ section.id }} .all-product-wrapper.four-product {
+    display: flex;
+    flex-wrap: wrap;
+}
+#shopify-section-{{ section.id }} .all-product-wrapper .product-holder {
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+}
+#shopify-section-{{ section.id }} .all-product-wrapper .product-holder p {
+    margin: 40px 24px;
+    font-size: 12px;
+    line-height: 14px;
+    text-transform: uppercase;
+}
+#shopify-section-{{ section.id }} .all-product-wrapper.one-product .product-holder {
+    width: 100%;
+    height: 100%;
+}
+#shopify-section-{{ section.id }} .all-product-wrapper.four-product .product-holder {
+    width: 50%;
+    height: 50%;
+}
+
+
+@media screen and (max-width: 768px) {
+    #shopify-section-{{ section.id }} .section-wrapper {
+        flex-direction: column !important;
+    }
+    #shopify-section-{{ section.id }} .section-wrapper .img-wrapper,
+    #shopify-section-{{ section.id }} .section-wrapper .all-product-wrapper {
+        width: 100%;
+        height: 50vh;
+    }
+    #shopify-section-{{ section.id }} .all-product-wrapper.four-product .product-holder {
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+    }
+    #shopify-section-{{ section.id }} .all-product-wrapper.four-product .product-holder p {
+        margin: 5px;
+    }
+}
+
+{% endstyle %}
+
+{% schema %}
+    {
+        "name": "Image with Products",
+        "settings": [
+            {
+                "type": "image_picker",
+                "id": "img",
+                "label": "Image"
+            },
+            {
+                "type": "text",
+                "id": "img_btn_text",
+                "label": "Image Button text",
+                "default": "Click me"
+            },
+            {
+                "type": "url",
+                "id": "img_btn_link",
+                "label": "Image Button link"
+            },
+            {
+                "type": "select",
+                "id": "side",
+                "label": "Image side",
+                "options": [
+                    {
+                    "value": "left",
+                    "label": "Left"
+                    },
+                    {
+                    "value": "right",
+                    "label": "Right"
+                    }
+                ],
+                "default": "left"
+            }
+        ],
+        "max_blocks": 4,
+        "blocks": [
+            {
+                "name": "Product",
+                "type": "product",
+                "settings": [
+                    {
+                        "type": "product",
+                        "id": "featured_product",
+                        "label": "Selected product"
+                    },
+                    {
+                        "type": "color",
+                        "id": "product_colour",
+                        "label": "Product Text Colour",
+                        "default": "#000000"
+                    }
+                ]
+            }
+        ],
+        "presets": [
+            {
+            "name": "Image with Products"
+            }
+        ]
+    }
+{% endschema %}

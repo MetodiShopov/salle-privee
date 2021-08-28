@@ -1,0 +1,138 @@
+<div class="section-wrapper">
+    <div class="all-product-wrapper">
+        {% for block in section.blocks %}
+            {% if  block.type == "product" %}
+                <a href="{{ block.settings.featured_product.url }}" class="box-holder" 
+                style="background-image: url(&quot;{{ block.settings.featured_product.featured_image | img_url: 'master' }}&quot;);">
+                    <p style="color: {{ block.settings.product_colour }}">
+                        {{ block.settings.featured_product.title }}
+                    </p>
+                    <p style="color: {{ block.settings.product_colour }}">
+                        {{ block.settings.featured_product.price | money_with_currency }}
+                    </p>
+                </a>
+            {% else %}
+                <a href="{{ block.settings.image_link }}" class="box-holder" 
+                style="background-image: url(&quot;{{ block.settings.image | img_url: 'master' }}&quot;);">
+                    <p style="color: {{ block.settings.image_text_colour }}">
+                        {{ block.settings.image_text }}
+                    </p>
+                </a>
+            {% endif %}
+            
+        {% endfor %}
+    </div>
+</div>
+
+{% style %}
+#shopify-section-{{ section.id }}.shopify-section {
+    margin-top: 0;
+}
+#shopify-section-{{ section.id }} .section-wrapper {
+    display: flex;
+    height: 450px;
+    max-height: 50vh;
+}
+
+#shopify-section-{{ section.id }} .section-wrapper .all-product-wrapper {
+    width: 100%;
+    display: flex;
+}
+
+#shopify-section-{{ section.id }} .all-product-wrapper .box-holder {
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+    height: 100%;
+    width: 25%;
+}
+#shopify-section-{{ section.id }} .all-product-wrapper .box-holder p {
+    margin: 20px 24px;
+    font-size: 12px;
+    line-height: 14px;
+    text-transform: uppercase;
+}
+
+
+@media screen and (max-width: 768px) {
+    #shopify-section-{{ section.id }} .section-wrapper .all-product-wrapper {
+        flex-flow: column;
+        flex-wrap: wrap;
+        width: 100%;
+        height: 100%;
+    }
+    #shopify-section-{{ section.id }} .all-product-wrapper .box-holder {
+        width: 50%;
+        height: 50%;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+    }
+    #shopify-section-{{ section.id }} .all-product-wrapper .box-holder p {
+        margin: 5px;
+    }
+}
+
+{% endstyle %}
+
+{% schema %}
+    {
+        "name": "Images in Column",
+        "max_blocks": 4,
+        "blocks": [
+            {
+                "name": "Product",
+                "type": "product",
+                "settings": [
+                    {
+                        "type": "product",
+                        "id": "featured_product",
+                        "label": "Selected product"
+                    },
+                    {
+                        "type": "color",
+                        "id": "product_colour",
+                        "label": "Product Text Colour",
+                        "default": "#000000"
+                    }
+                ]
+            },
+            {
+                "name": "Image",
+                "type": "image",
+                "settings": [
+                    {
+                        "type": "image_picker",
+                        "id": "image",
+                        "label": "Pick an image"
+                    },
+                    {
+                        "type": "url",
+                        "id": "image_link",
+                        "label": "Image redirect link"
+                    },
+                    {
+                        "type": "text",
+                        "id": "image_text",
+                        "label": "Image Text Colour",
+                        "default": "Some text"
+                    },
+                    {
+                        "type": "color",
+                        "id": "image_text_colour",
+                        "label": "Image Text Colour",
+                        "default": "#ffffff"
+                    }
+                ]
+            }
+        ],
+        "presets": [
+            {
+            "name": "Images in Column"
+            }
+        ]
+    }
+{% endschema %}
