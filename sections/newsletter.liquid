@@ -1,17 +1,13 @@
 <div class="newsletter" data-section-id="{{ section.id }}" data-section-type="newsletter-section">
   <div class="wrapper">
     {% unless section.settings.heading == blank %}
-      <div class="section-header text-center">
+      <div class="section-header">
         <h2 class="h1 section-header__title">{{ section.settings.heading | escape }}</h2>
-        {% if section.settings.subheading == blank %}
-          <hr class="hr--small">
-        {% endif %}
       </div>
     {% endunless %}
     {% unless section.settings.subheading == blank %}
       <div class="section-subheading rte text-center">
         {{ section.settings.subheading }}
-        <hr class="hr--small">
       </div>
     {% endunless %}
     {% form 'customer' %}
@@ -43,6 +39,60 @@
   </div>
 </div>
 
+{% style %}
+#shopify-section-{{ section.id }} .newsletter {
+  background-color: white;
+  padding: 45px;
+}
+#shopify-section-{{ section.id }} .wrapper {
+  display: flex;
+  flex-direction: column;
+  padding: unset;
+  margin-top: unset;
+  max-width: unset;
+}
+#shopify-section-{{ section.id }} .section-header {
+  display: block;
+  width: auto;
+  text-align: left;
+  margin: unset;
+  max-width: 230px;
+}
+#shopify-section-{{ section.id }} .section-header h2 {
+  font-size: 12px;
+  line-height: 14px;
+  text-transform: uppercase;
+}
+#shopify-section-{{ section.id }} .wrapper form {
+  text-align: left;
+  margin: unset;
+  max-width: 400px;
+}
+#shopify-section-{{ section.id }} .newsletter--form {
+  padding: unset;
+}
+#shopify-section-{{ section.id }} #Email {
+  color: #197622;
+  outline: none;
+  border-bottom: 1px solid #197622;
+  font-size: 12px;
+  line-height: 14px;
+  max-width: 230px;
+}
+#shopify-section-{{ section.id }} #Email::placeholder {
+  color: #197622;
+  font-family: Helvetica;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 8px;
+  line-height: 9px;
+  text-transform: uppercase;
+}
+#shopify-section-{{ section.id }} .newsletter__submit-text--large {
+  font-size: 8px;
+  line-height: 9px;
+}
+{% endstyle %}
 
 
 {% schema %}
@@ -73,7 +123,7 @@
   "class": "index-section index-newsletter-section shopify-section--full-width",
   "settings": [
     {
-      "type": "text",
+      "type": "textarea",
       "id": "heading",
       "label": {
         "cs": "Nadpis",
