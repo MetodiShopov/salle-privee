@@ -4574,3 +4574,35 @@ var afterResize = (function () {
     t[uniqueId] = setTimeout(callback, ms);
   };
 })();
+
+
+
+// MTD scripts
+
+// Header menu scroll
+var prevScrollpos = window.pageYOffset;
+// window.onscroll = function() {
+//   var currentScrollPos = window.pageYOffset;
+//   if (prevScrollpos > currentScrollPos) {
+//     document.getElementsByTagName("header")[0].classList.add("fixed");
+//   } else {
+//     document.getElementsByTagName("header")[0].classList.remove("fixed");
+//   }
+//   prevScrollpos = currentScrollPos;
+// }
+
+
+window.addEventListener("scroll", function(){
+  var currentScrollPos = window.pageYOffset;
+
+  if(window.scrollY==0){
+    //user is at the top of the page
+    document.getElementsByTagName("header")[0].classList.remove("fixed");
+  } 
+  else if (prevScrollpos > currentScrollPos) {
+    document.getElementsByTagName("header")[0].classList.add("fixed");
+  } else {
+    document.getElementsByTagName("header")[0].classList.remove("fixed");
+  }
+  prevScrollpos = currentScrollPos;
+});

@@ -1,0 +1,154 @@
+<header {% if template == "index" %}class = "transparent"{% endif %}>
+  <div class="logo">
+    <a href="{{ routes.root_url }}" class="site-header__logo-link">{{ section.settings.logo_text}}</a>
+  </div>
+  <nav>
+    <ul class="main_list">
+      {% for link in linklists[section.settings.header_menu].links %}
+        <li class="first_row_li">
+          <a href="{{ link.url }}" class="list_title">{{ link.title }}</a>
+
+          <ul class="sub_list">
+            {% for childlink in link.links %}
+              <li>
+                <a href="{{ childlink.url }}">{{ childlink.title }}</a>
+              </li>
+            {% endfor %}
+          </ul>
+        </li>
+      {% endfor %}
+    </ul>
+  </nav>
+  <div class="dqsno">
+    <a href="{{ routes.search_url }}" class="site-nav__link site-nav__link--icon" >
+      <span class="fallback-text">{{ 'general.search.title' | t }}</span>
+    </a>
+
+    {% if shop.customer_accounts_enabled %}
+      <a class="site-nav__link site-nav__link--icon" href="{{ routes.account_url }}">
+        <span class="fallback-text">
+          {% if customer %}
+            {{ 'layout.customer.account' | t }}
+          {% else %}
+            {{ 'layout.customer.log_in' | t }}
+          {% endif %}
+        </span>
+      </a>
+    {% endif %}
+
+    <a href="{{ routes.cart_url }}" class="site-nav__link site-nav__link--icon cart-link">
+      <span class="fallback-text">{{ 'layout.cart.title' | t }}</span>
+      <span class="cart-link__bubble{% if cart.item_count > 0 %} cart-link__bubble--visible{% endif %}"></span>
+    </a>
+  </div>
+
+</header>
+
+
+{% style %}
+header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 39px 46px;
+  transition: all 0.5s ease;
+
+  height: 100px;
+}
+header.transparent {
+  background: transparent;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 2;
+}
+header.fixed {
+  background-color: white;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 2;
+}
+header:hover {
+  background-color: white;
+  height: auto;
+}
+header .logo {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+header .logo a,
+header .dqsno a span {
+  font-size: 12px;
+  line-height: 14px;
+}
+header .dqsno a {
+  padding: 0;
+  padding-left: 26px;
+}
+header .cart-link__bubble {
+  top: -2px;
+  right: -10px
+}
+header nav .main_list {
+  display: flex;
+  list-style-type: none;
+}
+header nav .main_list .first_row_li {
+  padding: 0 39px; 
+}
+header nav .main_list .first_row_li a {
+  font-size: 12px;
+  line-height: 14px;
+  padding-bottom: 4px;
+}
+header nav .main_list .first_row_li:hover .list_title,
+header .dqsno a:hover span {
+  border-bottom: 1px solid black;
+}
+header nav .main_list .first_row_li:hover .sub_list {
+  height: auto;
+  max-height: 150px;
+}
+header .sub_list {
+  list-style-type: none;
+  height: 0px;
+  
+  transition: all 0.5s ease;
+  position: relative;
+  max-height:0px;
+  overflow:hidden;
+}
+header .sub_list li a {
+  color: #2D8541;
+}
+{% endstyle %}
+
+{% schema %}
+{
+  "name": "Header",
+  "settings": [
+    {
+      "type": "text",
+      "id": "logo_text",
+      "label": "Brand text",
+      "default": "Our brand"
+    },
+    {
+      "type": "link_list",
+      "id": "header_menu",
+      "label": "Header menu"
+    },
+    {
+      "type": "color",
+      "id": "body_text",
+      "label": "Body text",
+      "default": "#ffffff"
+    }
+  ]
+}
+{% endschema %}
