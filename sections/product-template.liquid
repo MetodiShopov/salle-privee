@@ -1,4 +1,5 @@
 <!-- /templates/product.liquid -->
+{% render 'breadcrumbs' %}
 {%- assign first_3d_model = product.media | where: "media_type", "model" | first -%}
 
 <div itemscope itemtype="http://schema.org/Product" id="ProductSection--{{ section.id }}"
@@ -20,7 +21,7 @@
     {%- assign first_media = true -%}
 
     <div class="grid product-single">
-      <div class="grid__item large--seven-twelfths medium--seven-twelfths text-center">
+      <div class="grid__item large--six-twelfths medium--six-twelfths text-center">
         <div id="ProductMediaGroup-{{ section.id }}" class="product-single__media-group-wrapper" data-product-single-media-group-wrapper>
           <div class="product-single__media-group{% unless stacked %} product-single__media-group--single-xr{% endunless %}" data-product-single-media-group>
             {%- assign enable_image_zoom = section.settings.enable_image_zoom -%}
@@ -30,7 +31,7 @@
             {% comment %}
               Display product images
             {% endcomment %}
-            {%- for media in product.media -%}
+            {%- for media in product.media limit:4 -%}
               {%- assign featured = false -%}
               {%- if media == featured_media -%}
                 {%- assign featured = true -%}
@@ -122,7 +123,7 @@
         </div>
       </div>
 
-      <div class="grid__item product-single__meta--wrapper medium--five-twelfths large--five-twelfths">
+      <div class="grid__item product-single__meta--wrapper large--six-twelfths medium--six-twelfths twelve-twelfths">
         <div class="product-single__meta">
           {% if section.settings.product_vendor_enable %}
             <h2 class="product-single__vendor" itemprop="brand">{{ product.vendor }}</h2>
@@ -136,7 +137,7 @@
             {% endcomment %}
             {% include 'product-price', variant: current_variant %}
 
-            {%- if cart.taxes_included or shop.shipping_policy.body != blank -%}
+            {% comment %} {%- if cart.taxes_included or shop.shipping_policy.body != blank -%}
               <div class="product-single__policies rte">
                 {%- if cart.taxes_included -%}
                   {{ 'products.general.include_taxes' | t }}
@@ -145,9 +146,9 @@
                   {{ 'products.general.shipping_policy_html' | t: link: shop.shipping_policy.url }}
                 {%- endif -%}
               </div>
-            {%- endif -%}
+            {%- endif -%} {% endcomment %}
 
-            <hr class="hr--small">
+            <hr class="full-width">
 
             <meta itemprop="priceCurrency" content="{{ cart.currency.iso_code }}">
             <link itemprop="availability" href="http://schema.org/{% if product.available %}InStock{% else %}OutOfStock{% endif %}">
@@ -165,7 +166,11 @@
                   <div class="radio-wrapper js product-form__item">
                     <label class="single-option-radio__label"
                       for="ProductSelect-option-{{ forloop.index0 }}">
-                      {{ option.name | escape }}
+                      {% if option.name == "Size" %}
+                        SELECT SIZE
+                      {% else %}  
+                        {{ option.name | escape }}
+                      {% endif %}
                     </label>
                     {% if section.settings.product_selector == 'radio' %}
                       <fieldset class="single-option-radio"
@@ -250,9 +255,38 @@
             {% include 'social-sharing', share_title: product.title, share_permalink: product.url, share_image: product.featured_media %}
           {% endif %}
         </div>
+
+        <div class="product-additional-info">
+          <div class="btn-wrapper">
+            {% if product.metafields.my_fields.details %}
+            <input type="radio" id="details" name="additional_info" value="DETAILS">
+            <label for="details" class="info_btn" id="first_info" >DETAILS</label>
+            {% endif %}
+
+            {% if product.metafields.my_fields.shipping_free_returns %}
+              <input type="radio" id="shipping" name="additional_info" value="SHIPPING & FREE RETURNS">
+              <label for="shipping" class="info_btn" id="second_info">SHIPPING & FREE RETURNS</label>
+            {% endif %}
+            
+            {% if product.metafields.my_fields.assistance %}
+              <input type="radio" id="assistance" name="additional_info" value="ASSISTANCE">
+              <label for="assistance" class="info_btn" id="third_info">ASSISTANCE</label>
+            {% endif %}
+          </div>
+
+          <div class="content-wrapper">
+            {%- for field in product.metafields.my_fields -%}
+              <div class="content">
+                <p>{{ field | last }}</p>
+              </div>
+            {%- endfor -%}
+          </div>
+        </div> 
+
       </div>
     </div>
 </div>
+
 {% unless product == empty %}
   <script type="application/json" id="ProductJson-{{ section.id }}">
     {{ product | json }}
@@ -261,6 +295,133 @@
     {{ product.media | where: 'media_type', 'model' | json }}
   </script>
 {% endunless %}
+
+<script>
+  window.onload = function() {
+    let btns = document.getElementsByClassName('info_btn');
+    for (let i = 0; i < btns.length; i++) {
+      const each = btns[i];
+      
+      each.addEventListener("click", function() {
+        let contents = document.getElementsByClassName('content');
+        
+        for (let i = 0; i < contents.length; i++) {
+          const element = contents[i];
+          
+          element.style.maxHeight = null;
+        }
+
+        if (this.id === "first_info") {
+          contents[0].style.maxHeight = contents[0].scrollHeight + "px";
+        } else if (this.id === "second_info") {
+          contents[1].style.maxHeight = contents[0].scrollHeight + "px";
+        } else if (this.id === "third_info") {
+          contents[2].style.maxHeight = contents[0].scrollHeight + "px";
+        }
+      });
+    }
+  };
+</script>
+
+
+{% style %}
+  .main-content {
+    padding-top: 0px !important;
+  }
+  .main-content .wrapper {
+    max-width: unset;
+    padding: 0px;
+  }
+  @media screen and (min-width: 591px) {
+    #shopify-section-{{ section.id }} .product-single__media-group {
+      display: flex;
+      flex-wrap: wrap;
+    }
+    #shopify-section-{{ section.id }} .product-single__media-flex-wrapper:last-child {
+      width: 100% !important;
+    }
+    #shopify-section-{{ section.id }} .product-single__media-flex-wrapper:not(:first-child){
+      width: 50%;
+    }
+  }
+
+
+  #shopify-section-{{ section.id }} .product-single__title {
+    font-weight: bold;
+    line-height: 41px;
+    text-align: left;
+  }
+  #shopify-section-{{ section.id }} .price-container {
+    text-align: right;
+  }
+  #shopify-section-{{ section.id }} .price-container span {
+    font-size: 12px;
+    line-height: 14px;
+  }
+  #shopify-section-{{ section.id }} .product-single__meta,
+  #shopify-section-{{ section.id }} .product-additional-info {
+    max-width: 500px;
+    margin: auto;
+  }
+  #shopify-section-{{ section.id }} .product-single__meta hr.full-width {
+    width: 100%;
+    margin-top: 2.5em;
+    margin-bottom: 0.8em;
+  }
+  #shopify-section-{{ section.id }} .single-option-radio__label {
+    font-size: 10px;
+    line-height: 11px;
+    text-align: left;
+  }
+  #shopify-section-{{ section.id }} .single-option-radio {
+    border-bottom: 1px solid black;
+    padding: 0px;
+    display: flex;
+  }
+  #shopify-section-{{ section.id }} .single-option-radio label {
+    margin: 0px;
+    flex-grow: 1;
+    background-color: white;
+  }
+  #shopify-section-{{ section.id }} .single-option-radio input[type=radio]:checked+label {
+    border: none;
+    border-bottom: 2px solid black;
+  }
+  #shopify-section-{{ section.id }} .product-single__description {
+    font-size: 14px;
+    line-height: 16px;
+  }
+
+  #shopify-section-{{ section.id }} .btn-wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  #shopify-section-{{ section.id }} .btn-wrapper input {
+    display: none;
+  }
+  #shopify-section-{{ section.id }} .btn-wrapper input:checked+label {
+    border-bottom: 1px solid black;
+  }
+  #shopify-section-{{ section.id }} .btn-wrapper .info_btn {
+    font-size: 12px;
+    line-height: 14px;
+    font-style: normal;
+    text-transform: uppercase;
+    padding: 4px;
+    margin-bottom: 3.5em;
+  }
+  #shopify-section-{{ section.id }} .content-wrapper .content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s ease-out;
+  }
+  #shopify-section-{{ section.id }} .content-wrapper .content p {
+    font-size: 14px;
+    line-height: 16px;
+    text-align: left;
+  }
+{% endstyle %}
 
 
 
