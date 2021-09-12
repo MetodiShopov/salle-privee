@@ -17,7 +17,19 @@
   </div>
 </div>
 
-
+{% style %}
+#shopify-section-{{ section.id }} .wrapper {
+  max-width: unset;
+}
+#shopify-section-{{ section.id }} .rte p {
+    font-family: Helvetica;
+    font-style: normal;
+    font-weight: 300;
+    font-size: 24px;
+    line-height: 28px;
+    text-align: left;
+}
+{% endstyle %}
 
 {% schema %}
 {
