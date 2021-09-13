@@ -1,6 +1,6 @@
 <!-- /templates/collection.liquid -->
 {%- if section.settings.show_collection_image and collection.image -%}
-  <div class="collection-hero">
+  <!-- <div class="collection-hero">
     <noscript>
       <div class="collection-hero__image-no-js" style="background-image:url({{ collection.image | img_url: '2048x2048' }});"></div>
     </noscript>
@@ -35,14 +35,14 @@
         data-parent-fit="cover"
         alt="{{ collection.image.alt | escape }}">
     </div>
-  </div>
+  </div> -->
 {%- endif -%}
 
 <div id="CollectionSection" data-section-id="{{ section.id }}" data-section-type="collection-template" data-grid-type="{{ section.settings.collection_products_grid }}">
   {%- paginate collection.products by 12 -%}
   <header class="section-header text-center">
     <h1>{{ collection.title }}</h1>
-    <hr class="hr--small">
+    {% comment %} <hr class="hr--small"> {% endcomment %}
     {%- if collection.description != blank -%}
       <div class="grid">
         <div class="grid__item">
@@ -59,7 +59,40 @@
       {%- endif -%}
     </div>
 
-    {%- if section.settings.collection_tags_enable -%}
+    <div class="bread_filter">
+      {% render 'breadcrumbs' %}
+
+      <ul class="tags tags--collection inline-list">
+          {% comment %}
+            Used for the catalog collection (/collections/all) and product collections (collections/{collection.handle})
+          {% endcomment %}
+          <li{% unless current_tags %} class="tag--active"{% endunless %}>
+            <a href="{% if collection.url == blank %}{{ routes.all_products_collection_url }}{% else %}{{ collection.url }}{% endif %}">
+              {{ 'collections.general.all_of_collection' | t }}
+            </a>
+          </li>
+
+          {%- for tag in collection.all_tags -%}
+            {%- if current_tags contains tag -%}
+              <li class="tag--active">
+                {{ tag | link_to_remove_tag: tag }}
+              </li>
+            {%- else -%}
+              <li>
+                {% comment %}
+                  Use link_to_add_tag if you want to allow filtering
+                  by multiple tags
+                {% endcomment %}
+                {{ tag | link_to_tag: tag }}
+              </li>
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
+
+    </div>
+
+    {% comment %} this code has been hidden {% endcomment %}
+    {%- if section.settings.collection_tags_enable.HIDE -%}
       {%- if collection.all_tags.size > 0 -%}
         {%- if section.settings.collection_sort_enable -%}
           <hr class="hr--small hr--clear">
@@ -94,7 +127,7 @@
     {%- endif -%}
 
     {%- if section.settings.collection_tags_enable -%}
-      <hr class="hr--small hr--clear">
+      {% comment %} <hr class="hr--small hr--clear"> {% endcomment %}
     {%- endif -%}
   </header>
 
@@ -133,9 +166,22 @@
     </div>
   {%- elsif section.settings.collection_products_grid == 'grid' -%}
     <div class="grid-uniform">
-      {%- assign grid_item_width = 'medium--one-half large--one-third' -%}
+      {%- assign grid_item_width = 'medium--one-half large--one-quarter' -%}
       {%- for product in collection.products -%}
-        {%- include 'product-grid-item' -%}
+        {% if forloop.index0 == 6 %}
+          <!-- <div class="grid__item grid-product medium--one-half large--two-quarters" 
+          style="height: 830px; 
+                background-image: url({{ collection.image | img_url: 'master' }}); 
+                background-repeat: no-repeat;
+                background-size: cover;
+                background-position: center;">
+
+          </div> -->
+
+          {%- include 'product-grid-item' -%}
+        {% else %}  
+          {%- include 'product-grid-item' -%}
+        {% endif %}
       {%- else -%}
         {%- if collection.handle == 'all' -%}
           {% comment %}
@@ -161,7 +207,93 @@
   {%- endpaginate -%}
 </div>
 
+{% style %}
 
+#PageContainer .wrapper {
+  max-width: unset;
+}
+#CollectionSection header {
+  margin-bottom: 0px;
+}
+#CollectionSection header h1 {
+  font-family: Helvetica;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 24px;
+  line-height: 28px;
+  text-align: left;
+}
+#CollectionSection header .rte {
+  font-family: Helvetica;
+  font-style: normal;
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 18px;
+  text-align: left;
+}
+#CollectionSection header .bread_filter {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+#CollectionSection header .bread_filter nav {
+  text-align: left;
+  width: 50%;
+  margin-left: 0px;
+}
+#CollectionSection header .bread_filter ul {
+  text-align: right;
+  width: 50%;
+  margin: unset;
+  align-self: center;
+}
+
+#CollectionSection .grid-uniform {
+  margin-left: 0px;
+}
+#CollectionSection .grid-uniform .grid__item.grid-product {
+  padding-left: 0px;
+}
+#CollectionSection .grid-uniform .grid-product__wrapper {
+  position: relative;
+  margin-bottom: 0px;
+}
+#CollectionSection .grid-uniform .grid-product__wrapper .grid-product__image-link {
+  background-color: white;
+}
+#CollectionSection .grid-uniform .grid-product__wrapper .grid-product__meta {
+    width: 100%;
+    position: absolute;
+    bottom: 0px;
+    font-family: Helvetica;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 14px;
+    display: flex;
+    flex-direction: row;
+    padding: 1.2vw 1vw;
+}
+#CollectionSection .grid-uniform .grid-product__wrapper .grid-product__title {
+  text-align: left;
+  max-width: 50%;
+}
+#CollectionSection .grid-uniform .grid-product__wrapper .grid-product__price-wrap {
+  width: 50%;
+  display: flex;
+  align-items: end;
+  justify-content: right;
+}
+
+#CollectionSection .product--wrapper {
+  max-width: unset !important; 
+}
+#CollectionSection .product--image {
+  max-width: unset !important; 
+  max-height: unset !important;
+}
+
+{% endstyle %}
 
 {% schema %}
 {

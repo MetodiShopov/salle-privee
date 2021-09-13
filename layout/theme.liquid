@@ -78,8 +78,8 @@
 {% endcomment %}
 <body id="{{ page_title | handle }}" class="{% if customer %}customer-logged-in {% endif %}template-{{ request.page_type | handle }}">
 
-  {% section 'header-new' %}
-  {% comment %} {% section 'header' %} {% endcomment %}
+  {% section 'header-dsk' %}
+  {% section 'header' %}
 
   <div id="CartDrawer" class="drawer drawer--right drawer--has-fixed-footer">
     <div class="drawer__fixed-header">

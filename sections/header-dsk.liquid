@@ -51,10 +51,11 @@
   flex-direction: row;
   justify-content: space-between;
   align-items: baseline;
-  padding: 39px 46px;
+  padding: 2% 2.5%;
   transition: all 0.5s ease;
-
-  <!-- height: 100px; -->
+  position: absolute;
+  top: 0;
+  width: 100%;
 }
 #shopify-section-{{ section.id }} header.transparent {
   background: transparent;
@@ -88,7 +89,7 @@
 }
 #shopify-section-{{ section.id }} header .dqsno a {
   padding: 0;
-  padding-left: 26px;
+  padding-left: 1.5vw;
 }
 #shopify-section-{{ section.id }} header .cart-link__bubble {
   top: -2px;
@@ -97,9 +98,10 @@
 #shopify-section-{{ section.id }} header nav .main_list {
   display: flex;
   list-style-type: none;
+  margin: 0px;
 }
 #shopify-section-{{ section.id }} header nav .main_list .first_row_li {
-  padding: 0 39px; 
+  padding: 0 2vw;
 }
 #shopify-section-{{ section.id }} header nav .main_list .first_row_li a {
   font-size: 12px;
@@ -116,7 +118,7 @@
 }
 #shopify-section-{{ section.id }} header .sub_list {
   list-style-type: none;
-  height: 0px;
+  height: auto;
   
   transition: all 0.5s ease;
   position: relative;
@@ -125,6 +127,13 @@
 }
 #shopify-section-{{ section.id }} header .sub_list li a {
   color: #2D8541;
+}
+
+
+@media screen and (max-width: 768px){
+  #shopify-section-{{ section.id }} {
+    display: none;
+  }
 }
 {% endstyle %}
 
