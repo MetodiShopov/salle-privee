@@ -110,71 +110,86 @@
 
         <div class="info_box">
 
-            {%- liquid
-                assign selectors_form_class = "selectors-form"
-              -%}
-            {%- form 'localization', class: selectors_form_class -%}
-                {%- if locale_selector -%}
-                    <div class="selectors-form__item">
-                        <h2 class="visually-hidden" id="lang-heading">
-                        {{ 'general.language.dropdown_label' | t }}
-                        </h2>
+            <div>
+                {%- liquid
+                    assign selectors_form_class = "selectors-form"
+                -%}
+                {%- form 'localization', class: selectors_form_class -%}
+                    {%- if locale_selector -%}
+                        <div class="selectors-form__item">
+                            <h2 class="visually-hidden" id="lang-heading">
+                            {{ 'general.language.dropdown_label' | t }}
+                            </h2>
+            
+                            <div class="disclosure" data-disclosure-locale>
+                            <button type="button" class="disclosure__toggle" aria-expanded="false" aria-controls="lang-list" aria-describedby="lang-heading" data-disclosure-toggle>
+                                {{ localization.language.endonym_name }}
+                            </button>
+                            <ul id="lang-list" class="disclosure-list" data-disclosure-list>
+                                {%- for language in localization.available_languages -%}
+                                <li class="disclosure-list__item {% if language.iso_code == localization.language.iso_code %}disclosure-list__item--current{% endif %}">
+                                    <a class="disclosure-list__option" href="#" lang="{{ language.iso_code }}" {% if language.iso_code == localization.language.iso_code %}aria-current="true"{% endif %} data-value="{{ language.iso_code }}" data-disclosure-option>
+                                    {{ language.endonym_name }}
+                                    </a>
+                                </li>
+                                {%- endfor -%}
+                            </ul>
+                            <input type="hidden" name="locale_code" id="LocaleSelector" value="{{ localization.language.iso_code }}" data-disclosure-input/>
+                            </div>
+                        </div>
+                    {%- endif -%}
         
-                        <div class="disclosure" data-disclosure-locale>
-                        <button type="button" class="disclosure__toggle" aria-expanded="false" aria-controls="lang-list" aria-describedby="lang-heading" data-disclosure-toggle>
-                            {{ localization.language.endonym_name }}
-                        </button>
-                        <ul id="lang-list" class="disclosure-list" data-disclosure-list>
-                            {%- for language in localization.available_languages -%}
-                            <li class="disclosure-list__item {% if language.iso_code == localization.language.iso_code %}disclosure-list__item--current{% endif %}">
-                                <a class="disclosure-list__option" href="#" lang="{{ language.iso_code }}" {% if language.iso_code == localization.language.iso_code %}aria-current="true"{% endif %} data-value="{{ language.iso_code }}" data-disclosure-option>
-                                {{ language.endonym_name }}
-                                </a>
-                            </li>
-                            {%- endfor -%}
-                        </ul>
-                        <input type="hidden" name="locale_code" id="LocaleSelector" value="{{ localization.language.iso_code }}" data-disclosure-input/>
-                        </div>
-                    </div>
-                {%- endif -%}
-    
-                {%- if country_selector -%}
-                    <div class="selectors-form__item">
-                        <h2 class="visually-hidden" id="country-heading">
-                        {{ 'general.country.dropdown_label' | t }}
-                        </h2>
-                        <p>LOCATION</p>
+                    {%- if country_selector -%}
+                        <div class="selectors-form__item">
+                            <h2 class="visually-hidden" id="country-heading">
+                            {{ 'general.country.dropdown_label' | t }}
+                            </h2>
+                            <p>LOCATION</p>
 
-                        {%- assign current_currency_symbol = localization.country.currency.symbol -%}
-                        {%- assign current_currency_iso_code = localization.country.currency.iso_code -%}
-                        <div class="disclosure" data-disclosure-country>
-                        <button type="button" class="disclosure__toggle" aria-expanded="false" aria-controls="country-list" aria-describedby="country-heading" data-disclosure-toggle>
-                            {%- if current_currency_symbol -%}
-                            {{ localization.country.name }} ({{ current_currency_iso_code }} {{ current_currency_symbol }})
-                            {%- else -%}
-                            {{ localization.country.name }} ({{ current_currency_iso_code }})
-                            {%- endif -%}
-                        </button>
-                        <ul id="country-list" class="disclosure-list" data-disclosure-list>
-                            {% for country in localization.available_countries %}
-                            {%- assign currency_symbol = country.currency.symbol -%}
-                            {%- assign currency_iso_code = country.currency.iso_code -%}
-                            <li class="disclosure-list__item {% if country.iso_code == localization.country.iso_code %}disclosure-list__item--current{% endif %}">
-                                <a class="disclosure-list__option" href="#" {% if country.iso_code == localization.country.iso_code %}aria-current="true"{% endif %} data-value="{{ country.iso_code }}" data-disclosure-option>
-                                {%- if currency_symbol -%}
-                                    {{ country.name }} ({{ currency_iso_code }} {{ currency_symbol }})
+                            {%- assign current_currency_symbol = localization.country.currency.symbol -%}
+                            {%- assign current_currency_iso_code = localization.country.currency.iso_code -%}
+                            <div class="disclosure" data-disclosure-country>
+                            <button type="button" class="disclosure__toggle" aria-expanded="false" aria-controls="country-list" aria-describedby="country-heading" data-disclosure-toggle>
+                                {%- if current_currency_symbol -%}
+                                {{ localization.country.name }} ({{ current_currency_iso_code }} {{ current_currency_symbol }})
                                 {%- else -%}
-                                    {{ country.name }} ({{ currency_iso_code }})
+                                {{ localization.country.name }} ({{ current_currency_iso_code }})
                                 {%- endif -%}
-                                </a>
-                            </li>
-                            {%- endfor -%}
-                        </ul>
-                        <input type="hidden" name="country_code" id="CountrySelector" value="{{ localization.country.iso_code }}" data-disclosure-input/>
+                            </button>
+                            <ul id="country-list" class="disclosure-list" data-disclosure-list>
+                                {% for country in localization.available_countries %}
+                                {%- assign currency_symbol = country.currency.symbol -%}
+                                {%- assign currency_iso_code = country.currency.iso_code -%}
+                                <li class="disclosure-list__item {% if country.iso_code == localization.country.iso_code %}disclosure-list__item--current{% endif %}">
+                                    <a class="disclosure-list__option" href="#" {% if country.iso_code == localization.country.iso_code %}aria-current="true"{% endif %} data-value="{{ country.iso_code }}" data-disclosure-option>
+                                    {%- if currency_symbol -%}
+                                        {{ country.name }} ({{ currency_iso_code }} {{ currency_symbol }})
+                                    {%- else -%}
+                                        {{ country.name }} ({{ currency_iso_code }})
+                                    {%- endif -%}
+                                    </a>
+                                </li>
+                                {%- endfor -%}
+                            </ul>
+                            <input type="hidden" name="country_code" id="CountrySelector" value="{{ localization.country.iso_code }}" data-disclosure-input/>
+                            </div>
                         </div>
-                    </div>
+                    {%- endif -%}
+                {%- endform -%}            
+
+                {%- if section.settings.show_payment_icons -%}
+                    {%- unless shop.enabled_payment_types == empty -%}
+                        <span class="visually-hidden">{{ 'general.payment.method' | t }}</span>
+                        <ul class="inline-list payment-icons site-footer__payment-icons">
+                        {%- for type in shop.enabled_payment_types -%}
+                            <li>
+                            {{ type | payment_type_svg_tag: class: 'icon' }}
+                            </li>
+                        {%- endfor -%}
+                        </ul>
+                    {%- endunless -%}
                 {%- endif -%}
-            {%- endform -%}            
+            </div>
 
             <p class="site-footer__copyright-content">
                 &copy; {{ 'now' | date: '%Y' }} {{ shop.name | link_to: routes.root_url }}
@@ -185,20 +200,6 @@
                   
             </p>
 
-            {%- if section.settings.show_payment_icons -%}
-                {%- unless shop.enabled_payment_types == empty -%}
-                    <span class="visually-hidden">{{ 'general.payment.method' | t }}</span>
-                    <ul class="inline-list payment-icons site-footer__payment-icons">
-                    {%- for type in shop.enabled_payment_types -%}
-                        <li>
-                        {{ type | payment_type_svg_tag: class: 'icon' }}
-                        </li>
-                    {%- endfor -%}
-                    </ul>
-                {%- endunless -%}
-            {%- endif -%}
-
-            <a href="https://www.linkedin.com/in/metodi-shopov-2aa7473b/">Created by Metodi Shopov</a>  
         </div>
     </div>
 </footer>
@@ -217,7 +218,7 @@
 }
 #shopify-section-{{ section.id }} .img_wrap img {
     width: 270px;
-    height: 270px;
+    height: auto;
     object-fit: cover;
 }
 
@@ -299,7 +300,7 @@
     }
     #shopify-section-footer .img_wrap img {
         width: 135px;
-        height: 135px;
+        height: auto;
     }
     #shopify-section-footer .menu_wrap {
         margin: auto;
