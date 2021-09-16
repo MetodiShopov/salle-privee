@@ -129,7 +129,24 @@
             <h2 class="product-single__vendor" itemprop="brand">{{ product.vendor }}</h2>
           {% endif %}
 
-          <h1 class="product-single__title" itemprop="name">{{ product.title }}</h1>
+          {% if collection.title == "Fragrance" or collection.title == "Books" %}
+            {% if product.handle == "discovery-set-5-x-2-ml-eau-de-parfum" %}
+              <h1 class="product-single__title" itemprop="name">{{ product.title | replace_first: ' | ', '<br/><span class="">' }}</h1>
+            {% elsif product.handle contains 'eau-de-parfum' %}
+              <h1 class="product-single__title" itemprop="name">{{ product.title | replace_first: ' Eau', '<br/><span class="">Eau ' }}</h1>
+            {% else %}
+              <h1 itemprop="name">{{ product.title }}</h1>
+            {% endif %}
+          {% elsif product.handle contains 'eau-de-parfum' %}
+            <h1 class="product-single__title" itemprop="name">{{ product.title | replace_first: ' Eau', '<br/><span class="">Eau ' }}</h1>
+          {% else %}
+            <h1 class="product-single__title" itemprop="name">{{ product.title | replace_first: ' ', '<br/><span class="">' }}</h1>
+          {% endif %}
+
+
+
+
+          {% comment %} <h1 class="product-single__title" itemprop="name">{{ product.title }}</h1> {% endcomment %}
 
           <div itemprop="offers" itemscope itemtype="http://schema.org/Offer">
             {% comment %}
@@ -256,33 +273,6 @@
           {% endif %}
         </div>
 
-        <div class="product-additional-info">
-          <div class="btn-wrapper">
-            {% if product.metafields.my_fields.details %}
-            <input type="radio" id="details" name="additional_info" value="DETAILS">
-            <label for="details" class="info_btn" id="first_info" >DETAILS</label>
-            {% endif %}
-
-            {% if product.metafields.my_fields.shipping_free_returns %}
-              <input type="radio" id="shipping" name="additional_info" value="SHIPPING & FREE RETURNS">
-              <label for="shipping" class="info_btn" id="second_info">SHIPPING & FREE RETURNS</label>
-            {% endif %}
-            
-            {% if product.metafields.my_fields.assistance %}
-              <input type="radio" id="assistance" name="additional_info" value="ASSISTANCE">
-              <label for="assistance" class="info_btn" id="third_info">ASSISTANCE</label>
-            {% endif %}
-          </div>
-
-          <div class="content-wrapper">
-            {%- for field in product.metafields.my_fields -%}
-              <div class="content">
-                <p>{{ field | last }}</p>
-              </div>
-            {%- endfor -%}
-          </div>
-        </div> 
-
       </div>
     </div>
 </div>
@@ -298,26 +288,13 @@
 
 <script>
   window.onload = function() {
-    let btns = document.getElementsByClassName('info_btn');
+    let btns = document.getElementsByClassName('accordion');
+    let firstChild = btns[0].getElementsByTagName('div');
     for (let i = 0; i < btns.length; i++) {
-      const each = btns[i];
+      const each = btns[i].getElementsByTagName('div');
       
-      each.addEventListener("click", function() {
-        let contents = document.getElementsByClassName('content');
-        
-        for (let i = 0; i < contents.length; i++) {
-          const element = contents[i];
-          
-          element.style.maxHeight = null;
-        }
-
-        if (this.id === "first_info") {
-          contents[0].style.maxHeight = contents[0].scrollHeight + "px";
-        } else if (this.id === "second_info") {
-          contents[1].style.maxHeight = contents[0].scrollHeight + "px";
-        } else if (this.id === "third_info") {
-          contents[2].style.maxHeight = contents[0].scrollHeight + "px";
-        }
+      each[0].addEventListener("click", function() {
+        this.parentElement.classList.toggle("open");
       });
     }
   };
@@ -345,8 +322,17 @@
 
   #shopify-section-{{ section.id }} .product-single__title {
     font-weight: bold;
-    line-height: 41px;
+    line-height: 25px;
     text-align: left;
+    margin-bottom: 0px;
+  }
+  #shopify-section-{{ section.id }} .product-single__title span {
+    font-family: Helvetica;
+    font-style: normal;
+    font-weight: 300;
+    font-size: 12px;
+    line-height: 14px;
+    text-transform: uppercase;
   }
   #shopify-section-{{ section.id }} .price-container {
     text-align: right;
@@ -355,10 +341,10 @@
     font-size: 12px;
     line-height: 14px;
   }
-  #shopify-section-{{ section.id }} .product-single__meta,
-  #shopify-section-{{ section.id }} .product-additional-info {
+  #shopify-section-{{ section.id }} .product-single__meta {
     max-width: 500px;
     margin: auto;
+    position: static !important;
   }
   #shopify-section-{{ section.id }} .product-single__meta hr.full-width {
     width: 100%;
@@ -389,34 +375,26 @@
     line-height: 16px;
   }
 
-  #shopify-section-{{ section.id }} .btn-wrapper {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+
+  #shopify-section-{{ section.id }} .section-subtitle {
+    cursor: pointer;
   }
-  #shopify-section-{{ section.id }} .btn-wrapper input {
-    display: none;
+  #shopify-section-{{ section.id }} .section-subtitle:hover,
+  #shopify-section-{{ section.id }} .accordion.open .section-subtitle {
+    border-bottom: solid 1px black;
+    margin-bottom: calc(2em - 1px);
   }
-  #shopify-section-{{ section.id }} .btn-wrapper input:checked+label {
-    border-bottom: 1px solid black;
-  }
-  #shopify-section-{{ section.id }} .btn-wrapper .info_btn {
-    font-size: 12px;
-    line-height: 14px;
-    font-style: normal;
-    text-transform: uppercase;
-    padding: 4px;
-    margin-bottom: 3.5em;
-  }
-  #shopify-section-{{ section.id }} .content-wrapper .content {
+  #shopify-section-{{ section.id }} .accordion div:not(:first-child), 
+  #shopify-section-{{ section.id }} .accordion p {
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.2s ease-out;
+    display: none;
   }
-  #shopify-section-{{ section.id }} .content-wrapper .content p {
-    font-size: 14px;
-    line-height: 16px;
-    text-align: left;
+  #shopify-section-{{ section.id }} .accordion.open div:not(:first-child), 
+  #shopify-section-{{ section.id }} .accordion.open p {
+    max-height: 100%;
+    display: block;
   }
 {% endstyle %}
 
