@@ -12,7 +12,7 @@
                     </p>
                 </a>
             {% else %}
-                <a href="{{ block.settings.image_link }}" class="box-holder" 
+                <a href="{{ block.settings.image_link }}" class="box-holder img-holder" 
                 style="background-image: url(&quot;{{ block.settings.image | img_url: 'master' }}&quot;);">
                     <p style="color: {{ block.settings.image_text_colour }}">
                         {{ block.settings.image_text }}
@@ -70,6 +70,8 @@
         flex-direction: column;
         align-items: center;
         justify-content: space-between;
+        background-size: contain;
+        background-repeat: no-repeat;
     }
     #shopify-section-{{ section.id }} .all-product-wrapper .box-holder p {
         margin: 5px;

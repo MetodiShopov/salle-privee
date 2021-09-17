@@ -138,7 +138,7 @@
               <h1 itemprop="name">{{ product.title }}</h1>
             {% endif %}
           {% elsif product.handle contains 'eau-de-parfum' %}
-            <h1 class="product-single__title" itemprop="name">{{ product.title | replace_first: ' Eau', '<br/><span class="">Eau ' }}</h1>
+            <h1 class="product-single__title" itemprop="name">{{ product.title | replace_first: ' Eau', '<span class="">Eau ' }}</h1>
           {% else %}
             <h1 class="product-single__title" itemprop="name">{{ product.title | replace_first: ' ', '<br/><span class="">' }}</h1>
           {% endif %}
@@ -290,11 +290,17 @@
   window.onload = function() {
     let btns = document.getElementsByClassName('accordion');
     let firstChild = btns[0].getElementsByTagName('div');
+    
     for (let i = 0; i < btns.length; i++) {
       const each = btns[i].getElementsByTagName('div');
       
+      if ( i !== 0 ) {
+        btns[i].classList.toggle("closed");
+      }
+
       each[0].addEventListener("click", function() {
         this.parentElement.classList.toggle("open");
+        this.parentElement.classList.toggle("closed");
       });
     }
   };
@@ -325,6 +331,8 @@
     line-height: 25px;
     text-align: left;
     margin-bottom: 0px;
+    display: flex;
+    flex-direction: column;
   }
   #shopify-section-{{ section.id }} .product-single__title span {
     font-family: Helvetica;
@@ -343,7 +351,7 @@
   }
   #shopify-section-{{ section.id }} .product-single__meta {
     max-width: 500px;
-    margin: auto;
+    margin: auto !important;
     position: static !important;
   }
   #shopify-section-{{ section.id }} .product-single__meta hr.full-width {
@@ -386,15 +394,16 @@
   }
   #shopify-section-{{ section.id }} .accordion div:not(:first-child), 
   #shopify-section-{{ section.id }} .accordion p {
-    max-height: 0;
     overflow: hidden;
     transition: max-height 0.2s ease-out;
-    display: none;
   }
   #shopify-section-{{ section.id }} .accordion.open div:not(:first-child), 
   #shopify-section-{{ section.id }} .accordion.open p {
     max-height: 100%;
-    display: block;
+  }
+  #shopify-section-{{ section.id }} .accordion.closed div:not(:first-child), 
+  #shopify-section-{{ section.id }} .accordion.closed p {
+    max-height: 0;
   }
 {% endstyle %}
 
