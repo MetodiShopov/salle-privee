@@ -21,7 +21,8 @@
         <input type="hidden" name="contact[tags]" value="newsletter">
         <div class="newsletter--form">
           <div class="input-group">
-            <input type="email" value="{% if customer %}{{ customer.email }}{% endif %}" placeholder="{{ 'general.newsletter_form.newsletter_placeholder' | t }}" name="contact[email]" id="Email" class="input-group-field newsletter__input" autocorrect="off" autocapitalize="off">
+            {% comment %} <input type="email" value="{% if customer %}{{ customer.email }}{% endif %}" placeholder="{{ 'general.newsletter_form.newsletter_placeholder' | t }}" name="contact[email]" id="Email" class="input-group-field newsletter__input" autocorrect="off" autocapitalize="off"> {% endcomment %}
+            <input type="email" value="{% if customer %}{{ customer.email }}{% endif %}" name="contact[email]" id="Email" class="input-group-field newsletter__input" autocorrect="off" autocapitalize="off">
             <span class="input-group-btn">
               <button id="Subscribe" type="submit"
                 class="btn newsletter__submit"
@@ -63,6 +64,12 @@
   line-height: 14px;
   text-transform: uppercase;
 }
+#shopify-section-{{ section.id }} .section-subheading {
+  font-size: 12px;
+  line-height: 14px;
+  margin: unset;
+  align-self: start;
+}
 #shopify-section-{{ section.id }} .wrapper form {
   text-align: left;
   margin: unset;
@@ -71,6 +78,9 @@
 #shopify-section-{{ section.id }} .newsletter--form {
   padding: unset;
 }
+#shopify-section-{{ section.id }} .newsletter--form .input-group {
+  width: 100%;
+}
 #shopify-section-{{ section.id }} #Email {
   color: #197622;
   outline: none;
@@ -78,6 +88,7 @@
   font-size: 12px;
   line-height: 14px;
   max-width: 230px;
+  font-style: inherit;
 }
 #shopify-section-{{ section.id }} #Email::placeholder {
   color: #197622;
@@ -87,6 +98,12 @@
   font-size: 8px;
   line-height: 9px;
   text-transform: uppercase;
+}
+#shopify-section-{{ section.id }} #Email:not(:placeholder-shown) + span.input-group-btn {
+  display: table-cell;
+}
+#shopify-section-{{ section.id }} span.input-group-btn {
+  display: none;
 }
 #shopify-section-{{ section.id }} .newsletter__submit-text--large {
   font-size: 8px;

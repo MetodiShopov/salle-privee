@@ -69,6 +69,13 @@
                             </a>
                         </li>
                     {% endif %}
+                    {% if settings.social_linkedin_link != blank %}
+                        <li>
+                            <a href="{{ settings.social_linkedin_link | escape }}" title="{{ 'layout.footer.social_platform' | t: name: shop.name, platform: 'LinkedIn' }}">
+                                LinkedIn
+                            </a>
+                        </li>
+                    {% endif %}
                     {% if settings.social_google_plus_link != blank %}
                         <li>
                             <a href="{{ settings.social_google_plus_link | escape }}" rel="publisher" title="{{ 'layout.footer.social_platform' | t: name: shop.name, platform: 'Google Plus' }}">
@@ -217,7 +224,7 @@
     padding: 3.4vw 0;
 }
 #shopify-section-{{ section.id }} .img_wrap img {
-    width: 270px;
+    max-width: 270px;
     height: auto;
     object-fit: cover;
 }
@@ -299,7 +306,7 @@
         align-self: center;
     }
     #shopify-section-footer .img_wrap img {
-        width: 135px;
+        max-width: 135px;
         height: auto;
     }
     #shopify-section-footer .menu_wrap {

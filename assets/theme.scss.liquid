@@ -1213,7 +1213,7 @@ label {
 input,
 textarea,
 select {
-  @include bodyFontItalic;
+  // @include bodyFontItalic;
   font-size: em(18px);
   border-color: transparent;
   background-color: $colorInputBg;
@@ -2883,6 +2883,8 @@ $slick-dot-character: '\2022';
   @include accentFontStack;
   @include transition(color 0.2s);
   font-size: em(14px);
+  
+  letter-spacing: inherit;
 }
 
 .site-nav--has-dropdown {

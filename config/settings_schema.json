@@ -1797,6 +1797,12 @@
       },
       {
         "type": "text",
+        "id": "social_linkedin_link",
+        "label": "LinkedIn",
+        "info": "http:\/\/linkedin.com\/Shopify"
+      },
+      {
+        "type": "text",
         "id": "social_youtube_link",
         "label": {
           "cs": "YouTube",
