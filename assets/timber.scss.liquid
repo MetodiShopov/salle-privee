@@ -537,9 +537,11 @@ body {
   // to be kept before Sections Everywhere
   body:not(.template-index) & {
     padding-top: $gutter;
+    padding-top: calc(30px + 6%);
 
     @include at-query($min, $large) {
-      padding-top: $contentTopMargin;
+      {% comment %} padding-top: $contentTopMargin; {% endcomment %}
+      padding-top: calc(30px + 6%);
     }
   }
 
@@ -2412,7 +2414,6 @@ $socialIconFontStack: 'icons';
 .site-header__logo-link,
 .site-header__logo-link:hover {
   color: $colorNavText;
-  margin: 0 auto;
   text-decoration: none;
 }
 

@@ -1,45 +1,57 @@
 <header {% if template == "index" %}class = "transparent"{% endif %}>
-  <div class="logo">
-    <a href="{{ routes.root_url }}" class="site-header__logo-link">{{ section.settings.logo_text}}</a>
-  </div>
-  <nav>
-    <ul class="main_list">
-      {% for link in linklists[section.settings.header_menu].links %}
-        <li class="first_row_li">
-          <a href="{{ link.url }}" class="list_title">{{ link.title }}</a>
+  <div class="nvg-wrapper">
+    <nav>
+      <ul class="main_list">
+          <li class="logo">
+            <a href="{{ routes.root_url }}" class="site-header__logo-link">{{ section.settings.logo_text}}</a>
+          </li>
+        {% for link in linklists[section.settings.header_menu].links %}
+          <li class="first_row_li" >
+            <a href="{{ link.url }}" class="list_title">{{ link.title }}</a>
 
-          <ul class="sub_list">
-            {% for childlink in link.links %}
-              <li>
-                <a href="{{ childlink.url }}">{{ childlink.title }}</a>
-              </li>
-            {% endfor %}
-          </ul>
-        </li>
-      {% endfor %}
-    </ul>
-  </nav>
-  <div class="dqsno">
-    <a href="{{ routes.search_url }}" class="site-nav__link site-nav__link--icon" >
-      <span class="fallback-text">{{ 'general.search.title' | t }}</span>
-    </a>
+            <ul class="sub_list">
+              {% for childlink in link.links %}
+                <li>
+                  <a href="{{ childlink.url }}">{{ childlink.title }}</a>
+                </li>
+              {% endfor %}
+            </ul>
+          </li>
+        {% endfor %}
+      </ul>
+    </nav>
+    <div class="dqsno">
+      <p class="site-nav__link site-nav__link--icon" onclick="searchClick(this)">
+        <span class="fallback-text">{{ 'general.search.title' | t }}</span>
+      </p>
 
-    {% if shop.customer_accounts_enabled %}
-      <a class="site-nav__link site-nav__link--icon" href="{{ routes.account_url }}">
-        <span class="fallback-text">
-          {% if customer %}
-            {{ 'layout.customer.account' | t }}
-          {% else %}
-            {{ 'layout.customer.log_in' | t }}
-          {% endif %}
-        </span>
+      <form class="search" action="/search" id="searchFrm">
+        <input class="medium-down--hide" type="text" placeholder="Search" name="q" value="">
+        <button type="submit">
+          <a href="{{ routes.search_url }}">
+            <img src="https://img.icons8.com/material-rounded/24/000000/search.png"/>
+          </a>
+        </button>
+      </form>
+      
+  
+      {% if shop.customer_accounts_enabled %}
+        <a class="site-nav__link site-nav__link--icon" href="{{ routes.account_url }}">
+          <span class="fallback-text">
+            {% if customer %}
+              {{ 'layout.customer.account' | t }}
+            {% else %}
+              {{ 'layout.customer.log_in' | t }}
+            {% endif %}
+          </span>
+        </a>
+      {% endif %}
+  
+      <a href="{{ routes.cart_url }}" class="site-nav__link site-nav__link--icon cart-link">
+        <span class="fallback-text">{{ 'layout.cart.title' | t }}</span>
+        <span class="cart-link__bubble{% if cart.item_count > 0 %} cart-link__bubble--visible{% endif %}"></span>
       </a>
-    {% endif %}
-
-    <a href="{{ routes.cart_url }}" class="site-nav__link site-nav__link--icon cart-link">
-      <span class="fallback-text">{{ 'layout.cart.title' | t }}</span>
-      <span class="cart-link__bubble{% if cart.item_count > 0 %} cart-link__bubble--visible{% endif %}"></span>
-    </a>
+    </div>
   </div>
 
 </header>
@@ -48,15 +60,19 @@
 {% style %}
 #shopify-section-{{ section.id }} header {
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: baseline;
-  padding: 2% 2.5%;
-  transition: all 0.5s ease;
+  flex-direction: column;
+  padding: 2.5% 4%;
+  transition: all 0.5s ease-in-out;
   position: absolute;
   top: 0;
   width: 100%;
   z-index: 10;
+}
+#shopify-section-{{ section.id }} header .nvg-wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: baseline;
 }
 #shopify-section-{{ section.id }} header.transparent {
   background: transparent;
@@ -77,33 +93,82 @@
 #shopify-section-{{ section.id }} header:hover {
   background-color: white;
   height: auto;
+  transition: all 0.5s ease-in-out;
 }
 #shopify-section-{{ section.id }} header .logo {
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
+  margin-top: 5px !important;
+  overflow-wrap: break-word;
 }
 #shopify-section-{{ section.id }} header .logo a,
-#shopify-section-{{ section.id }} header .dqsno a span {
+#shopify-section-{{ section.id }} header .dqsno p span,
+#shopify-section-{{ section.id }} header .dqsno input {
   font-size: 12px;
   line-height: 14px;
 }
-#shopify-section-{{ section.id }} header .dqsno a {
+#shopify-section-{{ section.id }} header .dqsno {
+  display: flex;
+  align-items: baseline;
+}
+#shopify-section-{{ section.id }} header .dqsno * {
+  font-family: Helvetica;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 12px;
+  line-height: 14px;
+}
+#shopify-section-{{ section.id }} header .dqsno p {
   padding: 0;
   padding-left: 1.5vw;
+  margin: unset;
+  cursor: pointer;
+}
+#shopify-section-{{ section.id }} header .dqsno .search {
+  border-bottom: 1px solid black;
+  max-width: 150px;
+  display: none;
+  position: relative;
+}
+#shopify-section-{{ section.id }} header .dqsno .search input {
+  background-color: unset;
+  border: none;
+  outline-offset: unset;
+  outline: unset;
+  color: #197622;
+
+  font-family: Helvetica;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 12px;
+  line-height: 14px;
+  text-transform: uppercase;
+}
+#shopify-section-{{ section.id }} header .dqsno .search button {
+  padding: unset;
+  position: absolute;
+  right: 0px;
+  top: 5px;
+}
+#shopify-section-{{ section.id }} header .dqsno .search button img {
+  width: 16px;
 }
 #shopify-section-{{ section.id }} header .cart-link__bubble {
   top: -2px;
   right: -10px
 }
+#shopify-section-{{ section.id }} header nav {
+  width: 50%;
+}
 #shopify-section-{{ section.id }} header nav .main_list {
   display: flex;
   list-style-type: none;
   margin: 0px;
+  justify-content: space-between;
 }
-#shopify-section-{{ section.id }} header nav .main_list .first_row_li {
-  margin: 0 2vw;
+#shopify-section-{{ section.id }} header nav .main_list > li {
   width: 165px;
+  margin: 0 5px;
+  align-self: start;
+  transition: all 0.5s ease-in-out;
 }
 #shopify-section-{{ section.id }} header nav .main_list .first_row_li a {
   font-size: 12px;
@@ -111,35 +176,57 @@
   padding-bottom: 4px;
 }
 #shopify-section-{{ section.id }} header nav .main_list .first_row_li:hover .list_title,
-#shopify-section-{{ section.id }} header .dqsno a:hover span {
+#shopify-section-{{ section.id }} header .dqsno p:hover span {
   border-bottom: 1px solid black;
+  transition: all 0.5s ease-in-out;
+}
+#shopify-section-{{ section.id }} header nav .main_list .first_row_li:hover {
+  height: 150px;
+  transition: all 0.5s ease-in-out;
 }
 #shopify-section-{{ section.id }} header nav .main_list .first_row_li:hover .sub_list {
-  height: auto;
   max-height: 100%;
-  margin-left: 0px;
-  margin-top: 15px;
+  margin: 15px 0 0 0;
+  transition: all 0.5s ease-in-out;
 }
 #shopify-section-{{ section.id }} header .sub_list {
   list-style-type: none;
   height: auto;
-  
-  transition: all 0.5s ease;
+  transition: all 0.5s ease-in-out;
   position: relative;
-  max-height:0px;
-  overflow:hidden;
+  max-height: 0px;
+  overflow: hidden;
+  margin: 0px;
+}
+#shopify-section-{{ section.id }} header .sub_list li {
+  line-height: 9px;
 }
 #shopify-section-{{ section.id }} header .sub_list li a {
+  font-family: Helvetica;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 8px;
+  line-height: 9px;
   color: #2D8541;
 }
-
 
 @media screen and (max-width: 768px){
   #shopify-section-{{ section.id }} {
     display: none;
   }
 }
+
 {% endstyle %}
+
+<script>
+  function searchClick(param) {
+    param.style.display = "none";
+
+    let searchForm = document.getElementById('searchFrm');
+    searchForm.style.display = "block";
+  }
+</script>
+
 
 {% schema %}
 {

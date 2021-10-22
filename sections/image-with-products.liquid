@@ -35,8 +35,9 @@
 }
 #shopify-section-{{ section.id }} .section-wrapper .img-wrapper {
     background-image: url("{{ section.settings.img | img_url: 'master' }}");
-    background-size: cover;
+    background-size: contain;
     background-position: center;
+    background-repeat: no-repeat;
     display: flex;
     flex-direction: column-reverse;
 }
@@ -52,8 +53,9 @@
     flex-wrap: wrap;
 }
 #shopify-section-{{ section.id }} .all-product-wrapper .product-holder {
-    background-size: cover;
+    background-size: contain;
     background-position: center;
+    background-repeat: no-repeat;
     display: flex;
     flex-direction: row;
     align-items: flex-end;
@@ -63,7 +65,6 @@
     margin: 40px 24px;
     font-size: 12px;
     line-height: 14px;
-    text-transform: uppercase;
 }
 #shopify-section-{{ section.id }} .all-product-wrapper.one-product .product-holder {
     width: 100%;

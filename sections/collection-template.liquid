@@ -62,7 +62,8 @@
     <div class="bread_filter">
       {% render 'breadcrumbs' %}
 
-      <ul class="tags tags--collection inline-list">
+      <button class="filterClick" onclick="filterClick(this)">Filter</button>
+      <ul class="tags tags--collection inline-list" id="filters">
           {% comment %}
             Used for the catalog collection (/collections/all) and product collections (collections/{collection.handle})
           {% endcomment %}
@@ -173,7 +174,7 @@
           style="height: 830px; 
                 background-image: url({{ collection.image | img_url: 'master' }}); 
                 background-repeat: no-repeat;
-                background-size: cover;
+                background-size: contain;
                 background-position: center;">
 
           </div> -->
@@ -241,11 +242,21 @@
   width: 50%;
   margin-left: 0px;
 }
+#CollectionSection header .bread_filter button {
+  font-family: Helvetica;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 12px;
+  line-height: 14px;
+  color: #197622;
+  text-transform: uppercase;
+}
 #CollectionSection header .bread_filter ul {
   text-align: right;
   width: 50%;
   margin: unset;
   align-self: center;
+  display: none;
 }
 
 #CollectionSection .grid-uniform {
@@ -306,6 +317,15 @@
 }
 
 {% endstyle %}
+
+<script>
+  function filterClick(param) {
+    param.style.display = "none";
+
+    let filterUl = document.getElementById('filters');
+    filterUl.style.display = "block";
+  }
+</script>
 
 {% schema %}
 {
