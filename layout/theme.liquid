@@ -74,7 +74,6 @@
   {% comment %} 
     SEO Product page script
   {% endcomment %}
-  <!-- MTD -->
   {% if template.name == "product" %}
     <script type="application/ld+json">
       {
@@ -91,7 +90,7 @@
         "offers": {
           "@type": "Offer",
           "priceCurrency": "EUR",
-          "price": "{{ product.compare_at_price }}",
+          "price": "{{ product.price | money_without_currency }}",
           "priceValidUntil": "2030-11-05",
           "availability": "{{ product..available }}"
         }

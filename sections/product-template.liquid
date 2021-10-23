@@ -393,16 +393,20 @@
     border-bottom: 2px solid #197622;
   }
   #shopify-section-{{ section.id }} .product-single__description {
-    font-size: 14px;
-    line-height: 16px;
+    font-size: 16px;
+    line-height: 1.25em;
   }
 
 
   #shopify-section-{{ section.id }} .section-subtitle {
     cursor: pointer;
+    text-transform: uppercase;
+  }
+  #shopify-section-{{ section.id }} .section-subtitle:after {
+    content: unset;
   }
   #shopify-section-{{ section.id }} .section-subtitle:hover,
-  #shopify-section-{{ section.id }} .accordion.open .section-subtitle {
+  #shopify-section-{{ section.id }} .accordion .section-subtitle {
     border-bottom: solid 1px black;
     margin-bottom: calc(2em - 1px);
   }
